@@ -1,0 +1,5 @@
+CREATE TABLE Genre (...);
+CREATE TABLE Movies (...);
+CREATE TABLE Actors (...);
+CREATE TABLE MovieActor (...);
+CREATE TABLE Ratings (...);
