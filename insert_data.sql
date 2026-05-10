@@ -1,26 +1,52 @@
--- Genres
-INSERT INTO Genre VALUES (1, 'Action'), (2, 'Comedy'), (3, 'Drama');
+USE MoviesDB;
 
--- Movies
-INSERT INTO Movies VALUES 
-(1, 'Inception', 2010, 1),
-(2, 'Superbad', 2007, 2),
-(3, 'The Pursuit of Happyness', 2006, 3);
+-- Insert one genre so the Movies table can reference it.
+INSERT IGNORE INTO Genres (GenreName)
+VALUES ('Action');
 
--- Actors
-INSERT INTO Actors VALUES
-(1, 'Leonardo DiCaprio'),
-(2, 'Jonah Hill'),
-(3, 'Will Smith');
+-- Insert movies from the CSV.
+INSERT INTO Movies (Title, ReleaseYear, GenreID)
+SELECT
+    movie_title,
+    title_year,
+    1
+FROM RawMovies
+WHERE movie_title IS NOT NULL;
 
--- MovieActor
-INSERT INTO MovieActor VALUES
-(1, 1),
-(2, 2),
-(3, 3);
+-- Insert actors from the three actor columns.
+INSERT IGNORE INTO Actors (ActorName)
+SELECT actor_1_name
+FROM RawMovies
+WHERE actor_1_name IS NOT NULL;
 
--- Ratings
-INSERT INTO Ratings VALUES
-(1, 1, 8.8),
-(2, 2, 7.6),
-(3, 3, 8.0);
+INSERT IGNORE INTO Actors (ActorName)
+SELECT actor_2_name
+FROM RawMovies
+WHERE actor_2_name IS NOT NULL;
+
+INSERT IGNORE INTO Actors (ActorName)
+SELECT actor_3_name
+FROM RawMovies
+WHERE actor_3_name IS NOT NULL;
+
+-- Insert ratings.
+INSERT INTO Ratings (MovieID, IMDbRating, NumVotes)
+SELECT
+    m.MovieID,
+    r.imdb_score,
+    r.num_voted_users
+FROM RawMovies r
+JOIN Movies m
+  ON TRIM(r.movie_title) = TRIM(m.Title);
+
+-- Link movies to the first actor.
+INSERT IGNORE INTO MovieActor (MovieID, ActorID)
+SELECT
+    m.MovieID,
+    a.ActorID
+FROM RawMovies r
+JOIN Movies m
+  ON TRIM(r.movie_title) = TRIM(m.Title)
+JOIN Actors a
+  ON TRIM(r.actor_1_name) = TRIM(a.ActorName)
+WHERE r.actor_1_name IS NOT NULL;

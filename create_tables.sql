@@ -1,32 +1,36 @@
-CREATE TABLE Genre (
-    GenreID INT PRIMARY KEY,
-    GenreName VARCHAR(50)
+CREATE DATABASE IF NOT EXISTS MoviesDB;
+USE MoviesDB;
+
+CREATE TABLE Genres (
+    GenreID INT AUTO_INCREMENT PRIMARY KEY,
+    GenreName VARCHAR(100) NOT NULL UNIQUE
 );
 
 CREATE TABLE Movies (
-    MovieID INT PRIMARY KEY,
-    Title VARCHAR(100),
+    MovieID INT AUTO_INCREMENT PRIMARY KEY,
+    Title VARCHAR(255) NOT NULL,
     ReleaseYear INT,
     GenreID INT,
-    FOREIGN KEY (GenreID) REFERENCES Genre(GenreID)
+    FOREIGN KEY (GenreID) REFERENCES Genres(GenreID)
 );
 
 CREATE TABLE Actors (
-    ActorID INT PRIMARY KEY,
-    ActorName VARCHAR(100)
+    ActorID INT AUTO_INCREMENT PRIMARY KEY,
+    ActorName VARCHAR(255) NOT NULL UNIQUE
 );
 
 CREATE TABLE MovieActor (
-    MovieID INT,
-    ActorID INT,
+    MovieID INT NOT NULL,
+    ActorID INT NOT NULL,
     PRIMARY KEY (MovieID, ActorID),
     FOREIGN KEY (MovieID) REFERENCES Movies(MovieID),
     FOREIGN KEY (ActorID) REFERENCES Actors(ActorID)
 );
 
 CREATE TABLE Ratings (
-    RatingID INT PRIMARY KEY,
-    MovieID INT,
-    Rating DECIMAL(3,1),
+    RatingID INT AUTO_INCREMENT PRIMARY KEY,
+    MovieID INT NOT NULL UNIQUE,
+    IMDbRating DECIMAL(3,1),
+    NumVotes INT,
     FOREIGN KEY (MovieID) REFERENCES Movies(MovieID)
 );
