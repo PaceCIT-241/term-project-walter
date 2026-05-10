@@ -11,18 +11,18 @@ SELECT * FROM Ratings LIMIT 100;
 SELECT
     m.Title,
     g.GenreName,
-    r.IMDbRating,
+    r.Rating AS Rating,
     r.NumVotes
 FROM Movies m
 JOIN Genres g ON m.GenreID = g.GenreID
 JOIN Ratings r ON m.MovieID = r.MovieID
-ORDER BY r.IMDbRating DESC
+ORDER BY Rating DESC
 LIMIT 100;
 
 -- Aggregate query
 SELECT
     g.GenreName,
-    ROUND(AVG(r.IMDbRating), 2) AS AverageRating
+    ROUND(AVG(r.Rating), 2) AS AverageRating
 FROM Movies m
 JOIN Genres g ON m.GenreID = g.GenreID
 JOIN Ratings r ON m.MovieID = r.MovieID
